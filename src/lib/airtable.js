@@ -1,6 +1,18 @@
 const TOKEN = import.meta.env.VITE_AIRTABLE_TOKEN;
 const BASE_ID = import.meta.env.VITE_BASE_ID;
 
+// Token/Base ID kontrolü
+if (!TOKEN) {
+  console.error('[Airtable] VITE_AIRTABLE_TOKEN tanımlı değil! Netlify environment variables kontrol edin.');
+} else {
+  console.log(`[Airtable] Token yüklendi: ${TOKEN.slice(0, 10)}...`);
+}
+if (!BASE_ID) {
+  console.error('[Airtable] VITE_BASE_ID tanımlı değil!');
+} else {
+  console.log(`[Airtable] Base ID: ${BASE_ID}`);
+}
+
 const TABLE_IDS = {
   projeler: 'tbltRmgvvrHVAg1QP',
   calisanlar: 'tblnM0liFe7fWZVrM',
@@ -71,13 +83,18 @@ function buildUrl(tableId, params = {}) {
 }
 
 async function fetchAll(tableId, params = {}) {
+  if (!TOKEN || !BASE_ID) {
+    throw new Error('Airtable bağlantı bilgileri eksik. Netlify Environment Variables ayarlarını kontrol edin: VITE_AIRTABLE_TOKEN ve VITE_BASE_ID.');
+  }
   let records = [];
   let offset = null;
   do {
     const p = offset
       ? { returnFieldsByFieldId: 'true', ...params, offset }
       : { returnFieldsByFieldId: 'true', ...params };
-    const res = await fetch(buildUrl(tableId, p), { headers });
+    const url = buildUrl(tableId, p);
+    console.log(`[Airtable] GET ${url.slice(0, 80)}... | token: ${TOKEN.slice(0, 10)}...`);
+    const res = await fetch(url, { headers });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err?.error?.message || `HTTP ${res.status}`);
