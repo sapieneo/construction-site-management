@@ -132,16 +132,16 @@ export default function Raporlar() {
   }
 
   return (
-    <div className="p-3 sm:p-6">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Raporlar</h1>
+    <div className="p-4 sm:p-8">
+      <div className="mb-5 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Raporlar</h1>
         <p className="text-slate-400 text-sm mt-1">
           Tarih aralığına göre proje ve çalışan raporları
         </p>
       </div>
 
       {/* Tarih Seçici */}
-      <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 mb-6">
+      <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 sm:p-6 mb-8 backdrop-blur-sm shadow-md shadow-slate-950/40">
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex flex-col gap-1.5">
             <label className="text-slate-400 text-sm">Başlangıç Tarihi</label>
@@ -191,58 +191,58 @@ export default function Raporlar() {
       {!loading && aramaYapildi && (
         <>
           {/* Genel Özet Kartlar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-3xl font-bold text-blue-400">{projeRapor.length}</p>
-              <p className="text-slate-400 text-xs mt-1">Aktif Proje</p>
+              <p className="text-slate-400 text-xs mt-1.5">Aktif Proje</p>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-3xl font-bold text-yellow-400">{toplamGun}</p>
-              <p className="text-slate-400 text-xs mt-1">Toplam İşçi-Gün</p>
+              <p className="text-slate-400 text-xs mt-1.5">Toplam İşçi-Gün</p>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-lg font-bold text-emerald-400">{toplamUcret.toLocaleString('tr-TR')} ₺</p>
-              <p className="text-slate-400 text-xs mt-1">Toplam Çalışan Ücreti</p>
+              <p className="text-slate-400 text-xs mt-1.5">Toplam Çalışan Ücreti</p>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-lg font-bold text-purple-400">{toplamMaliyet.toLocaleString('tr-TR')} ₺</p>
-              <p className="text-slate-400 text-xs mt-1">Toplam Firma Maliyeti</p>
+              <p className="text-slate-400 text-xs mt-1.5">Toplam Firma Maliyeti</p>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className={`text-lg font-bold ${calisanRapor.length > 0 ? 'text-slate-300' : 'text-slate-500'}`}>
                 {calisanRapor.length}
               </p>
-              <p className="text-slate-400 text-xs mt-1">Çalışan Sayısı</p>
+              <p className="text-slate-400 text-xs mt-1.5">Çalışan Sayısı</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             {/* Projeler */}
             <div>
-              <h2 className="text-lg font-semibold text-slate-200 mb-3">Projeler</h2>
+              <h2 className="text-lg font-bold text-white mb-4">Projeler</h2>
 
               {/* Özet Kartlar */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-slate-800 border border-purple-500/30 rounded-xl p-4">
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <div className="bg-slate-800/60 border border-purple-500/30 rounded-2xl p-5 backdrop-blur-sm shadow-md shadow-slate-950/40">
                   <p className="text-xl font-bold text-purple-400">
                     {toplamProjeMaliyeti.toLocaleString('tr-TR')} ₺
                   </p>
-                  <p className="text-slate-400 text-xs mt-1">Toplam Firma Maliyeti</p>
+                  <p className="text-slate-400 text-xs mt-1.5">Toplam Firma Maliyeti</p>
                 </div>
-                <div className="bg-slate-800 border border-slate-600 rounded-xl p-4">
+                <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 backdrop-blur-sm shadow-md shadow-slate-950/40">
                   <p className={`text-xl font-bold ${kalanAlacakRenk(toplamKalanAlacak)}`}>
                     {toplamKalanAlacak.toLocaleString('tr-TR')} ₺
                   </p>
-                  <p className="text-slate-400 text-xs mt-1">Toplam Kalan Alacak</p>
+                  <p className="text-slate-400 text-xs mt-1.5">Toplam Kalan Alacak</p>
                 </div>
               </div>
 
               {projeRapor.length === 0 ? (
-                <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-center">
+                <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-8 text-center backdrop-blur-sm">
                   <p className="text-slate-500">Bu tarih aralığında kayıt bulunamadı</p>
                 </div>
               ) : (
-                <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+                <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden backdrop-blur-sm shadow-md shadow-slate-950/40">
                   <div className="overflow-x-auto">
                   <table className="w-full text-sm min-w-[420px]">
                     <thead>
@@ -302,30 +302,30 @@ export default function Raporlar() {
 
             {/* Çalışanlar */}
             <div>
-              <h2 className="text-lg font-semibold text-slate-200 mb-3">Çalışanlar</h2>
+              <h2 className="text-lg font-bold text-white mb-4">Çalışanlar</h2>
 
               {/* Özet Kartlar */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-slate-800 border border-emerald-500/30 rounded-xl p-4">
+              <div className="grid grid-cols-2 gap-4 mb-5">
+                <div className="bg-slate-800/60 border border-emerald-500/30 rounded-2xl p-5 backdrop-blur-sm shadow-md shadow-slate-950/40">
                   <p className="text-xl font-bold text-emerald-400">
                     {toplamCalisanUcret.toLocaleString('tr-TR')} ₺
                   </p>
-                  <p className="text-slate-400 text-xs mt-1">Toplam Hak Edilen Ücret</p>
+                  <p className="text-slate-400 text-xs mt-1.5">Toplam Hak Edilen Ücret</p>
                 </div>
-                <div className="bg-slate-800 border border-slate-600 rounded-xl p-4">
+                <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 backdrop-blur-sm shadow-md shadow-slate-950/40">
                   <p className={`text-xl font-bold ${kalanBorcRenk(toplamKalanBorc)}`}>
                     {toplamKalanBorc.toLocaleString('tr-TR')} ₺
                   </p>
-                  <p className="text-slate-400 text-xs mt-1">Toplam Kalan Borç</p>
+                  <p className="text-slate-400 text-xs mt-1.5">Toplam Kalan Borç</p>
                 </div>
               </div>
 
               {calisanRapor.length === 0 ? (
-                <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-center">
+                <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-8 text-center backdrop-blur-sm">
                   <p className="text-slate-500">Bu tarih aralığında kayıt bulunamadı</p>
                 </div>
               ) : (
-                <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+                <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden backdrop-blur-sm shadow-md shadow-slate-950/40">
                   <div className="overflow-x-auto">
                   <table className="w-full text-sm min-w-[420px]">
                     <thead>

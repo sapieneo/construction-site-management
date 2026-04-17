@@ -120,14 +120,14 @@ export default function SantiyeRaporu() {
   );
 
   return (
-    <div className="p-3 sm:p-6">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Şantiye Raporu</h1>
+    <div className="p-4 sm:p-8">
+      <div className="mb-5 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Şantiye Raporu</h1>
         <p className="text-slate-400 text-xs sm:text-sm mt-1">Proje bazlı işçilik ve maliyet raporu</p>
       </div>
 
       {/* Tarih Seçici */}
-      <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 mb-6">
+      <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 sm:p-6 mb-8 backdrop-blur-sm shadow-md shadow-slate-950/40">
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex flex-col gap-1.5">
             <label className="text-slate-400 text-sm">Başlangıç Tarihi</label>
@@ -177,41 +177,41 @@ export default function SantiyeRaporu() {
       {!loading && aramaYapildi && (
         <>
           {/* Genel özet */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-3xl font-bold text-blue-400">{projeRaporlar.filter(r => r.toplamGun > 0).length}</p>
-              <p className="text-slate-400 text-xs mt-1">Aktif Proje</p>
+              <p className="text-slate-400 text-xs mt-1.5">Aktif Proje</p>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-3xl font-bold text-yellow-400">{genelToplamGun}</p>
-              <p className="text-slate-400 text-xs mt-1">Toplam İşçi-Gün</p>
+              <p className="text-slate-400 text-xs mt-1.5">Toplam İşçi-Gün</p>
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-4 text-center">
+            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
               <p className="text-xl font-bold text-purple-400">{genelToplamMaliyet.toLocaleString('tr-TR')} ₺</p>
-              <p className="text-slate-400 text-xs mt-1">Toplam Firma Maliyeti</p>
+              <p className="text-slate-400 text-xs mt-1.5">Toplam Firma Maliyeti</p>
             </div>
           </div>
 
           {/* Proje kartları */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {projeRaporlar.map(({ proje, calisanlar, toplamGun, toplamMaliyet, tahsilatlar }) => {
               const toplamTahsilat = tahsilatlar.reduce((s, t) => s + (t.tutar || 0), 0);
               const kalanAlacak = toplamMaliyet - toplamTahsilat;
 
               return (
-                <div key={proje.id} className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden flex flex-col">
+                <div key={proje.id} className="bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden flex flex-col backdrop-blur-sm shadow-md shadow-slate-950/50">
                   {/* Kart başlık */}
-                  <div className="px-5 py-4 border-b border-slate-700">
-                    <h3 className="font-semibold text-slate-100 text-base leading-tight flex items-center gap-2">
+                  <div className="px-5 py-5 border-b border-slate-700/60">
+                    <h3 className="font-bold text-white text-lg leading-tight flex items-center gap-2">
                       {proje.ad}
                       {proje.aktif === false && (
                         <span className="text-slate-500 text-xs font-normal">(Pasif)</span>
                       )}
                     </h3>
                     {proje.musteri && (
-                      <p className="text-slate-400 text-xs mt-0.5">{proje.musteri}</p>
+                      <p className="text-slate-400 text-sm mt-1">{proje.musteri}</p>
                     )}
-                    <div className="flex gap-4 mt-3 flex-wrap">
+                    <div className="flex gap-5 mt-4 flex-wrap">
                       <div>
                         <p className="text-2xl font-bold text-blue-400">{toplamGun}</p>
                         <p className="text-slate-500 text-xs">işçi-gün</p>
@@ -268,9 +268,9 @@ export default function SantiyeRaporu() {
                   </div>
 
                   {/* Tahsilatlar bölümü */}
-                  <div className="border-t border-slate-700">
+                  <div className="border-t border-slate-700/60">
                     {/* Tahsilat özeti + buton */}
-                    <div className="flex items-center justify-between px-5 py-3 border-b border-slate-700/50">
+                    <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700/50">
                       <div className="flex gap-4">
                         <div>
                           <p className="text-sm font-bold text-emerald-400">
@@ -322,7 +322,7 @@ export default function SantiyeRaporu() {
 
                   {/* Alt toplam */}
                   {calisanlar.length > 0 && (
-                    <div className="px-5 py-3 bg-slate-700/30 border-t border-slate-700 flex justify-between items-center gap-3 flex-wrap">
+                    <div className="px-5 py-4 bg-slate-700/20 border-t border-slate-700/60 flex justify-between items-center gap-3 flex-wrap">
                       <span className="text-slate-500 text-xs">{calisanlar.length} çalışan</span>
                       <div className="flex gap-4 text-sm font-semibold">
                         <span className="text-purple-300">

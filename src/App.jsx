@@ -29,9 +29,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#0a0f1e] flex flex-col">
       {/* Header */}
-      <header className="bg-slate-800/80 backdrop-blur border-b border-slate-700 sticky top-0 z-40">
+      <header className="bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-40 shadow-lg shadow-slate-950/50">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
           {/* Logo */}
           <div className="flex items-center gap-3 flex-shrink-0">
@@ -118,7 +118,7 @@ export default function App() {
       </header>
 
       {/* Sayfa İçeriği — key ile re-mount tetiklenir */}
-      <main className="flex-1 max-w-screen-2xl w-full mx-auto">
+      <main className="flex-1 max-w-screen-2xl w-full mx-auto px-0 sm:px-2">
         {aktifSayfa === 'gorevlendirme' && <Gorevlendirme key={`gov-${reloadKey}`} />}
         {aktifSayfa === 'raporlar' && <Raporlar key={`rap-${reloadKey}`} />}
         {aktifSayfa === 'santiye-raporu' && <SantiyeRaporu key={`sr-${reloadKey}`} />}

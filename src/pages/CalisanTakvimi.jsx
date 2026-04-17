@@ -181,9 +181,9 @@ export default function CalisanTakvimi() {
   }
 
   return (
-    <div className="p-3 sm:p-6">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Çalışan Takvimi</h1>
+    <div className="p-4 sm:p-8">
+      <div className="mb-5 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-white">Çalışan Takvimi</h1>
         <p className="text-slate-400 text-xs sm:text-sm mt-1">Aylık proje atama görünümü</p>
       </div>
 
@@ -194,24 +194,24 @@ export default function CalisanTakvimi() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
         {/* Sol: Çalışan listesi */}
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-semibold text-slate-300">Çalışanlar</h2>
-            <span className="text-xs text-slate-500 bg-slate-700 px-2 py-1 rounded-full">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-bold text-white">Çalışanlar</h2>
+            <span className="text-xs text-slate-400 bg-slate-800/80 border border-slate-700 px-2.5 py-1 rounded-full">
               {calisanlar.length} kişi
             </span>
           </div>
-          <div className="flex flex-col gap-1 max-h-[220px] lg:max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
+          <div className="flex flex-col gap-1.5 max-h-[220px] lg:max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
             {calisanlar.map((c) => (
               <button
                 key={c.id}
                 onClick={() => { setSecilenId(c.id); setAssignments({}); setOdemeler([]); }}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all ${
+                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-left transition-all backdrop-blur-sm ${
                   secilenId === c.id
-                    ? 'bg-blue-600/20 border border-blue-500/40 text-blue-200'
-                    : 'border border-transparent hover:bg-slate-700/50 text-slate-300'
+                    ? 'bg-blue-600/20 border border-blue-500/50 text-blue-200 shadow-sm'
+                    : 'border border-slate-700/40 hover:bg-slate-800/60 hover:border-slate-600/60 text-slate-300'
                 }`}
               >
                 <Avatar calisan={c} />
@@ -235,9 +235,9 @@ export default function CalisanTakvimi() {
         </div>
 
         {/* Sağ: Takvim + Ödemeler */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
           {!secilenId ? (
-            <div className="flex items-center justify-center h-80 bg-slate-800 border border-slate-700 rounded-xl">
+            <div className="flex items-center justify-center h-80 bg-slate-800/60 border border-slate-700/70 rounded-2xl backdrop-blur-sm shadow-md shadow-slate-950/40">
               <div className="text-center">
                 <p className="text-slate-500 text-5xl mb-3">📅</p>
                 <p className="text-slate-400 text-sm">Sol taraftan bir çalışan seçin</p>
@@ -246,9 +246,9 @@ export default function CalisanTakvimi() {
           ) : (
             <>
               {/* Takvim kartı */}
-              <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+              <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden backdrop-blur-sm shadow-md shadow-slate-950/50">
                 {/* Ay navigasyonu */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700/60">
                   <button
                     onClick={prevMonth}
                     className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors text-lg"
@@ -335,7 +335,7 @@ export default function CalisanTakvimi() {
                 )}
 
                 {/* Ay özeti */}
-                <div className="px-5 py-4 bg-slate-700/30 border-t border-slate-700">
+                <div className="px-5 py-5 bg-slate-700/20 border-t border-slate-700/60">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-3xl font-bold text-blue-400">{toplamCalisma}</p>
@@ -352,9 +352,9 @@ export default function CalisanTakvimi() {
               </div>
 
               {/* Ödemeler kartı */}
-              <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+              <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden backdrop-blur-sm shadow-md shadow-slate-950/50">
                 {/* Başlık */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700/60">
                   <div>
                     <h3 className="font-semibold text-slate-100 text-sm">Ödemeler</h3>
                     <p className="text-slate-500 text-xs mt-0.5">Tüm zamanlar</p>
@@ -369,7 +369,7 @@ export default function CalisanTakvimi() {
                 </div>
 
                 {/* Özet: hak edilen / ödenen / kalan */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 border-b border-slate-700/50">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 px-3 sm:px-5 py-4 sm:py-5 border-b border-slate-700/50">
                   <div>
                     <p className="text-sm sm:text-lg font-bold text-emerald-400">
                       {toplamHakEdilen.toLocaleString('tr-TR')} ₺

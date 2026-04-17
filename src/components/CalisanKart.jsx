@@ -62,15 +62,15 @@ export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, 
   // Kart arka plan / kenarlık duruma göre
   let kartClass = '';
   if (isDragging) {
-    kartClass = 'opacity-30 cursor-grabbing bg-blue-900/40 border-blue-700';
+    kartClass = 'opacity-30 cursor-grabbing bg-blue-900/40 border-blue-700/60 shadow-md';
   } else if (durum === 'hasta') {
-    kartClass = 'bg-amber-900/30 border-amber-600/60 cursor-not-allowed';
+    kartClass = 'bg-amber-900/25 border-amber-600/50 cursor-not-allowed shadow-sm';
   } else if (durum === 'izinli') {
-    kartClass = 'bg-blue-900/30 border-blue-500/60 cursor-not-allowed';
+    kartClass = 'bg-blue-900/25 border-blue-500/50 cursor-not-allowed shadow-sm';
   } else if (durum === 'atandi') {
-    kartClass = 'bg-slate-800/60 border-emerald-800/60 opacity-70 cursor-grab hover:border-emerald-600 hover:opacity-90';
+    kartClass = 'bg-slate-800/50 border-emerald-800/50 opacity-70 cursor-grab hover:border-emerald-600 hover:opacity-90 shadow-sm backdrop-blur-sm';
   } else {
-    kartClass = 'bg-slate-800 border-slate-600 cursor-grab hover:border-blue-500 hover:bg-slate-700 active:cursor-grabbing';
+    kartClass = 'bg-slate-800/70 border-slate-700/60 cursor-grab hover:border-blue-500/80 hover:bg-slate-700/80 active:cursor-grabbing shadow-sm backdrop-blur-sm';
   }
 
   return (
@@ -78,7 +78,7 @@ export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, 
       ref={setNodeRef}
       style={style}
       {...(!surukleDevre ? { ...listeners, ...attributes } : {})}
-      className={`rounded-lg border px-3 py-2 select-none transition-all flex items-center gap-2.5 ${kartClass}`}
+      className={`rounded-xl border px-3.5 py-2.5 select-none transition-all flex items-center gap-3 ${kartClass}`}
     >
       <Avatar calisan={calisan} />
 

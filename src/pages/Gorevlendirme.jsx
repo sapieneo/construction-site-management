@@ -299,9 +299,9 @@ export default function Gorevlendirme() {
   }
 
   return (
-    <div className="p-3 sm:p-6">
+    <div className="p-4 sm:p-8">
       {/* Başlık + Tarih + Görevlendir Butonu */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Görevlendirme</h1>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">
@@ -370,16 +370,16 @@ export default function Gorevlendirme() {
           onDragEnd={handleDragEnd}
           onDragCancel={() => setAktifCalisan(null)}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-8">
             {/* Sol: Çalışanlar */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-slate-200">Çalışanlar</h2>
-                <span className="text-xs text-slate-500 bg-slate-700 px-2 py-1 rounded-full">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-100">Çalışanlar</h2>
+                <span className="text-xs text-slate-400 bg-slate-800/80 border border-slate-700 px-2.5 py-1 rounded-full">
                   {calisanlar.length} kişi
                 </span>
               </div>
-              <div className="flex flex-col gap-2 max-h-[calc(100vh-260px)] overflow-y-auto pr-1">
+              <div className="flex flex-col gap-2.5 max-h-[calc(100vh-260px)] overflow-y-auto pr-1">
                 {calisanlar.map((calisan) => (
                   <CalisanKart
                     key={calisan.id}
@@ -395,13 +395,13 @@ export default function Gorevlendirme() {
 
             {/* Sağ: Projeler */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-slate-200">Projeler</h2>
-                <span className="text-xs text-slate-500 bg-slate-700 px-2 py-1 rounded-full">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-100">Projeler</h2>
+                <span className="text-xs text-slate-400 bg-slate-800/80 border border-slate-700 px-2.5 py-1 rounded-full">
                   {projeler.length} proje
                 </span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 max-h-[calc(100vh-260px)] overflow-y-auto pr-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-h-[calc(100vh-260px)] overflow-y-auto pr-1">
                 {projeler.map((proje) => (
                   <ProjeKutu
                     key={proje.id}
