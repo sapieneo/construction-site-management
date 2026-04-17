@@ -32,7 +32,7 @@ function Avatar({ calisan, size = 'md' }) {
 }
 
 // durum: null | 'atandi' | 'hasta' | 'izinli'
-export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, overlay = false }) {
+export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, onAta, overlay = false }) {
   const surukleDevre = durum === 'hasta' || durum === 'izinli';
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -105,10 +105,21 @@ export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, 
         <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" title="Projeye atandı" />
       )}
 
+      {/* Mobil "Ata" butonu */}
+      {onAta && durum !== 'hasta' && durum !== 'izinli' && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onAta(); }}
+          onPointerDown={(e) => e.stopPropagation()}
+          className="sm:hidden flex-shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-700 hover:bg-blue-600 text-white transition-colors"
+        >
+          Ata
+        </button>
+      )}
+
       {/* H / İ / ⚙️ butonları */}
       <div
         className="flex gap-1 flex-shrink-0"
-        onPointerDown={(e) => e.stopPropagation()} // drag'ı engelle
+        onPointerDown={(e) => e.stopPropagation()}
       >
         <button
           onClick={(e) => { e.stopPropagation(); onToggleDurum?.(calisan.id, 'hasta'); }}

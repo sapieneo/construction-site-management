@@ -50,6 +50,7 @@ export default function Gorevlendirme() {
   const [aktifCalisan, setAktifCalisan] = useState(null);
   const [kaydetmeYukluyor, setKaydetmeYukluyor] = useState(false);
   const [basariMesaj, setBasariMesaj] = useState(null);
+  const [ataModal, setAtaModal] = useState(null); // mobil atama için { calisan }
   const kaydetmeKilidi = useRef(false);
 
   const sensors = useSensors(
@@ -192,6 +193,22 @@ export default function Gorevlendirme() {
     setTakipler((prev) => prev.filter((t) => t.id !== takipId));
   }
 
+  function handleMobileAta(calisanId, projeId) {
+    if (durumlar[calisanId]) return;
+    const calisan = calisanlar.find((c) => c.id === calisanId);
+    const proje = projeler.find((p) => p.id === projeId);
+    if (!calisan || !proje) return;
+    const mevcutAtama = takipler.find((t) => t.calisanId === calisanId);
+    if (mevcutAtama) {
+      if (mevcutAtama.projeId === projeId) return;
+      setHata(`${calisan.ad} ${calisan.soyad} bugün zaten bir projeye atandı. Önce mevcut atamayı kaldırın.`);
+      return;
+    }
+    const tempId = `temp-${Date.now()}-${Math.random()}`;
+    const kayitAd = `${calisan.ad} ${calisan.soyad} - ${formatTarih(tarih)} - ${proje.ad}`;
+    setTakipler((prev) => [...prev, { id: tempId, kayitAd, tarih, calisanId, projeId }]);
+  }
+
   async function handleGorevlendir() {
     if (kaydetmeKilidi.current) return;
     kaydetmeKilidi.current = true;
@@ -282,13 +299,14 @@ export default function Gorevlendirme() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       {/* Başlık + Tarih + Görevlendir Butonu */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Görevlendirme</h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Çalışanları projelere sürükleyerek atayın
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Görevlendirme</h1>
+          <p className="text-slate-400 text-xs sm:text-sm mt-1">
+            <span className="hidden sm:inline">Çalışanları projelere sürükleyerek atayın</span>
+            <span className="sm:hidden">Çalışana tıklayıp projeye atayın</span>
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
@@ -369,6 +387,7 @@ export default function Gorevlendirme() {
                     durum={calisanDurum(calisan.id)}
                     onToggleDurum={toggleDurum}
                     onPasifAl={handlePasifCalisanAl}
+                    onAta={() => setAtaModal(calisan)}
                   />
                 ))}
               </div>
@@ -403,6 +422,54 @@ export default function Gorevlendirme() {
             )}
           </DragOverlay>
         </DndContext>
+      )}
+
+      {/* Mobil: Proje seçim modalı */}
+      {ataModal && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-sm max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700">
+              <div>
+                <h3 className="font-semibold text-slate-100 text-base">
+                  {ataModal.ad} {ataModal.soyad}
+                </h3>
+                <p className="text-slate-400 text-xs mt-0.5">Hangi projeye atanacak?</p>
+              </div>
+              <button
+                onClick={() => setAtaModal(null)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="overflow-y-auto flex-1 p-3 flex flex-col gap-1.5">
+              {projeler.map((proje) => {
+                const zatenAtandi = takipler.find(
+                  (t) => t.calisanId === ataModal.id && t.projeId === proje.id
+                );
+                return (
+                  <button
+                    key={proje.id}
+                    onClick={() => {
+                      handleMobileAta(ataModal.id, proje.id);
+                      setAtaModal(null);
+                    }}
+                    className={`w-full text-left px-4 py-3 rounded-xl transition-colors text-sm font-medium ${
+                      zatenAtandi
+                        ? 'bg-emerald-900/30 border border-emerald-700/50 text-emerald-300'
+                        : 'bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-transparent hover:border-slate-600'
+                    }`}
+                  >
+                    <span>{proje.ad}</span>
+                    {zatenAtandi && (
+                      <span className="ml-2 text-emerald-400 text-xs">✓ Atandı</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

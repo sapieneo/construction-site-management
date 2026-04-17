@@ -21,6 +21,7 @@ export default function App() {
   const [aktifSayfa, setAktifSayfa] = useState('gorevlendirme');
   const [acikModal, setAcikModal] = useState(null); // 'calisan' | 'proje' | null
   const [reloadKey, setReloadKey] = useState(0);
+  const [menuAcik, setMenuAcik] = useState(false);
 
   function modalKapat() {
     setAcikModal(null);
@@ -35,63 +36,85 @@ export default function App() {
           {/* Logo */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <span className="text-xl">🦺</span>
-            <span className="font-bold text-slate-100 text-lg tracking-tight hidden sm:inline">
+            <span className="font-bold text-slate-100 text-base sm:text-lg tracking-tight hidden sm:inline">
               Şantiye Yönetim
             </span>
           </div>
 
-          {/* Nav + Ekle + Yenile butonları */}
-          <div className="flex items-center gap-2 overflow-x-auto min-w-0">
-            <nav className="flex gap-1 flex-shrink-0">
-              {NAV.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setAktifSayfa(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                    aktifSayfa === item.id
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-900/40'
-                      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700'
-                  }`}
-                >
-                  <span>{item.icon}</span>
-                  <span className="hidden md:inline">{item.label}</span>
-                </button>
-              ))}
-            </nav>
-
-            {/* Ayırıcı */}
-            <div className="w-px h-6 bg-slate-700 flex-shrink-0 hidden sm:block" />
-
-            {/* Ekle + Yenile butonları */}
-            <div className="flex gap-2 flex-shrink-0">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex gap-1 flex-shrink-0">
+            {NAV.map((item) => (
               <button
-                onClick={() => setAcikModal('calisan')}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-green-700 hover:bg-green-600 text-white transition-colors whitespace-nowrap"
-                title="Yeni Çalışan Ekle"
+                key={item.id}
+                onClick={() => setAktifSayfa(item.id)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                  aktifSayfa === item.id
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-900/40'
+                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-700'
+                }`}
               >
-                <span className="font-bold text-base leading-none">+</span>
-                <span className="hidden sm:inline">Çalışan</span>
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
               </button>
-              <button
-                onClick={() => setAcikModal('proje')}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-blue-700 hover:bg-blue-600 text-white transition-colors whitespace-nowrap"
-                title="Yeni Proje Ekle"
-              >
-                <span className="font-bold text-base leading-none">+</span>
-                <span className="hidden sm:inline">Proje</span>
-              </button>
+            ))}
+          </nav>
 
-              {/* Yenile butonu */}
-              <button
-                onClick={() => setReloadKey((k) => k + 1)}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-colors flex-shrink-0"
-                title="Listeyi yenile"
-              >
-                🔄
-              </button>
-            </div>
+          {/* Sağ: Ekle + Yenile + Hamburger */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <div className="hidden sm:block w-px h-6 bg-slate-700" />
+            <button
+              onClick={() => setAcikModal('calisan')}
+              className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-sm font-medium bg-green-700 hover:bg-green-600 text-white transition-colors"
+              title="Yeni Çalışan Ekle"
+            >
+              <span className="font-bold text-base leading-none">+</span>
+              <span className="hidden sm:inline">Çalışan</span>
+            </button>
+            <button
+              onClick={() => setAcikModal('proje')}
+              className="flex items-center gap-1 px-2.5 py-2 rounded-lg text-sm font-medium bg-blue-700 hover:bg-blue-600 text-white transition-colors"
+              title="Yeni Proje Ekle"
+            >
+              <span className="font-bold text-base leading-none">+</span>
+              <span className="hidden sm:inline">Proje</span>
+            </button>
+            <button
+              onClick={() => setReloadKey((k) => k + 1)}
+              className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-colors"
+              title="Listeyi yenile"
+            >
+              🔄
+            </button>
+            {/* Hamburger — sadece mobilde */}
+            <button
+              onClick={() => setMenuAcik((v) => !v)}
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-700 transition-colors"
+              title="Menü"
+            >
+              {menuAcik ? '✕' : '☰'}
+            </button>
           </div>
         </div>
+
+        {/* Mobil açılır menü */}
+        {menuAcik && (
+          <div className="md:hidden border-t border-slate-700 bg-slate-800/95 px-4 py-2">
+            {NAV.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => { setAktifSayfa(item.id); setMenuAcik(false); }}
+                className={`flex items-center gap-2.5 w-full px-3 py-3 rounded-lg text-sm font-medium transition-all mb-1 ${
+                  aktifSayfa === item.id
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                <span className="text-base">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* Sayfa İçeriği — key ile re-mount tetiklenir */}

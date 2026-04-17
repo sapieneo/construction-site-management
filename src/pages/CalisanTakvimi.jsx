@@ -181,10 +181,10 @@ export default function CalisanTakvimi() {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-100">Çalışan Takvimi</h1>
-        <p className="text-slate-400 text-sm mt-1">Aylık proje atama görünümü</p>
+    <div className="p-3 sm:p-6">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Çalışan Takvimi</h1>
+        <p className="text-slate-400 text-xs sm:text-sm mt-1">Aylık proje atama görünümü</p>
       </div>
 
       {hata && (
@@ -203,7 +203,7 @@ export default function CalisanTakvimi() {
               {calisanlar.length} kişi
             </span>
           </div>
-          <div className="flex flex-col gap-1 max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
+          <div className="flex flex-col gap-1 max-h-[220px] lg:max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
             {calisanlar.map((c) => (
               <button
                 key={c.id}
@@ -290,7 +290,7 @@ export default function CalisanTakvimi() {
                   </div>
                   <div className="grid grid-cols-7 gap-1.5">
                     {calendarDays.map((day, idx) => {
-                      if (!day) return <div key={`empty-${idx}`} className="min-h-[62px]" />;
+                      if (!day) return <div key={`empty-${idx}`} className="min-h-[44px] sm:min-h-[62px]" />;
                       const dateKey = toDateStr(year, month, day);
                       const projeId = assignments[dateKey];
                       const renk = projeId ? projeRenkMap[projeId] : null;
@@ -298,17 +298,20 @@ export default function CalisanTakvimi() {
                       return (
                         <div
                           key={dateKey}
-                          className={`rounded-lg p-2 min-h-[62px] border text-xs flex flex-col transition-all ${
+                          className={`rounded-lg p-1 sm:p-2 min-h-[44px] sm:min-h-[62px] border text-xs flex flex-col transition-all ${
                             renk ? renk.cel : 'bg-slate-700/20 border-slate-700/30'
                           }`}
                         >
-                          <span className={`font-semibold text-sm mb-1 leading-none ${renk ? '' : 'text-slate-600'}`}>
+                          <span className={`font-semibold text-xs sm:text-sm mb-0.5 leading-none ${renk ? '' : 'text-slate-600'}`}>
                             {day}
                           </span>
                           {projeAd && (
-                            <span className="leading-tight font-medium" style={{ fontSize: '10px' }}>
+                            <span className="leading-tight font-medium hidden sm:block" style={{ fontSize: '10px' }}>
                               {projeAd.length > 14 ? projeAd.slice(0, 14) + '…' : projeAd}
                             </span>
+                          )}
+                          {projeAd && (
+                            <span className="sm:hidden w-1.5 h-1.5 rounded-full mt-0.5 flex-shrink-0" style={{ background: 'currentColor' }} />
                           )}
                         </div>
                       );
@@ -366,21 +369,21 @@ export default function CalisanTakvimi() {
                 </div>
 
                 {/* Özet: hak edilen / ödenen / kalan */}
-                <div className="grid grid-cols-3 gap-4 px-5 py-4 border-b border-slate-700/50">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 border-b border-slate-700/50">
                   <div>
-                    <p className="text-lg font-bold text-emerald-400">
+                    <p className="text-sm sm:text-lg font-bold text-emerald-400">
                       {toplamHakEdilen.toLocaleString('tr-TR')} ₺
                     </p>
                     <p className="text-slate-500 text-xs mt-0.5">Bu ay hak ettiği</p>
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-blue-400">
+                    <p className="text-sm sm:text-lg font-bold text-blue-400">
                       {toplamOdeme.toLocaleString('tr-TR')} ₺
                     </p>
                     <p className="text-slate-500 text-xs mt-0.5">Toplam ödenen</p>
                   </div>
                   <div>
-                    <p className={`text-lg font-bold ${kalanBorc > 0 ? 'text-amber-400' : 'text-slate-400'}`}>
+                    <p className={`text-sm sm:text-lg font-bold ${kalanBorc > 0 ? 'text-amber-400' : 'text-slate-400'}`}>
                       {kalanBorc.toLocaleString('tr-TR')} ₺
                     </p>
                     <p className="text-slate-500 text-xs mt-0.5">

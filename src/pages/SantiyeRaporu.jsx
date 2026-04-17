@@ -120,10 +120,10 @@ export default function SantiyeRaporu() {
   );
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-100">Şantiye Raporu</h1>
-        <p className="text-slate-400 text-sm mt-1">Proje bazlı işçilik ve maliyet raporu</p>
+    <div className="p-3 sm:p-6">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Şantiye Raporu</h1>
+        <p className="text-slate-400 text-xs sm:text-sm mt-1">Proje bazlı işçilik ve maliyet raporu</p>
       </div>
 
       {/* Tarih Seçici */}
