@@ -132,16 +132,18 @@ export default function Raporlar() {
   }
 
   return (
-    <div className="p-4 sm:p-8">
-      <div className="mb-5 sm:mb-8">
-        <h1 className="text-xl sm:text-2xl font-bold text-white">Raporlar</h1>
-        <p className="text-slate-400 text-sm mt-1">
-          Tarih aralığına göre proje ve çalışan raporları
-        </p>
+    <div>
+      <div className="sy-page-head" style={{ marginBottom: 24 }}>
+        <div>
+          <h1>Raporlar</h1>
+          <p style={{ marginTop: 6, color: 'var(--ink-mute)', fontSize: 13 }}>
+            Tarih aralığına göre proje ve çalışan raporları
+          </p>
+        </div>
       </div>
 
       {/* Tarih Seçici */}
-      <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 sm:p-6 mb-8 backdrop-blur-sm shadow-md shadow-slate-950/40">
+      <div style={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', padding: '20px 24px', marginBottom: 28 }}>
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex flex-col gap-1.5">
             <label className="text-slate-400 text-sm">Başlangıç Tarihi</label>
@@ -191,28 +193,26 @@ export default function Raporlar() {
       {!loading && aramaYapildi && (
         <>
           {/* Genel Özet Kartlar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
-            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
-              <p className="text-3xl font-bold text-blue-400">{projeRapor.length}</p>
-              <p className="text-slate-400 text-xs mt-1.5">Aktif Proje</p>
+          <div className="sy-kpis" style={{ gridTemplateColumns: 'repeat(5, 1fr)', marginBottom: 28 }}>
+            <div className="sy-kpi sy-kpi--accent">
+              <div className="sy-kpi__label">Aktif Proje</div>
+              <div className="sy-kpi__value">{projeRapor.length}</div>
             </div>
-            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
-              <p className="text-3xl font-bold text-yellow-400">{toplamGun}</p>
-              <p className="text-slate-400 text-xs mt-1.5">Toplam İşçi-Gün</p>
+            <div className="sy-kpi">
+              <div className="sy-kpi__label">İşçi-Gün</div>
+              <div className="sy-kpi__value" style={{ color: 'var(--warn)' }}>{toplamGun}</div>
             </div>
-            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
-              <p className="text-lg font-bold text-emerald-400">{toplamUcret.toLocaleString('tr-TR')} ₺</p>
-              <p className="text-slate-400 text-xs mt-1.5">Toplam Çalışan Ücreti</p>
+            <div className="sy-kpi">
+              <div className="sy-kpi__label">Çalışan Ücreti</div>
+              <div className="sy-kpi__value" style={{ fontSize: 18, color: 'var(--ok)' }}>{toplamUcret.toLocaleString('tr-TR')} ₺</div>
             </div>
-            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
-              <p className="text-lg font-bold text-purple-400">{toplamMaliyet.toLocaleString('tr-TR')} ₺</p>
-              <p className="text-slate-400 text-xs mt-1.5">Toplam Firma Maliyeti</p>
+            <div className="sy-kpi">
+              <div className="sy-kpi__label">Firma Maliyeti</div>
+              <div className="sy-kpi__value" style={{ fontSize: 18, color: 'oklch(72% 0.14 285)' }}>{toplamMaliyet.toLocaleString('tr-TR')} ₺</div>
             </div>
-            <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl p-5 text-center backdrop-blur-sm shadow-md shadow-slate-950/40">
-              <p className={`text-lg font-bold ${calisanRapor.length > 0 ? 'text-slate-300' : 'text-slate-500'}`}>
-                {calisanRapor.length}
-              </p>
-              <p className="text-slate-400 text-xs mt-1.5">Çalışan Sayısı</p>
+            <div className="sy-kpi">
+              <div className="sy-kpi__label">Çalışan Sayısı</div>
+              <div className="sy-kpi__value">{calisanRapor.length}</div>
             </div>
           </div>
 

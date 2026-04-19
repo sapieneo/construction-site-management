@@ -1,30 +1,21 @@
 import { useDroppable } from '@dnd-kit/core';
 import Spinner from './Spinner';
 
-const AVATAR_COLORS = [
-  'bg-blue-600', 'bg-emerald-600', 'bg-violet-600', 'bg-amber-600',
-  'bg-rose-600', 'bg-cyan-600', 'bg-indigo-600', 'bg-teal-600',
-];
-
-function avatarRenk(isim) {
-  let hash = 0;
-  for (let i = 0; i < isim.length; i++) hash = isim.charCodeAt(i) + ((hash << 5) - hash);
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+// Deterministic color hue from project name
+function projeHue(ad) {
+  let h = 0;
+  for (let i = 0; i < ad.length; i++) h = ad.charCodeAt(i) + ((h << 5) - h);
+  const HUES = [32, 215, 150, 285, 12, 340, 225, 90];
+  return HUES[Math.abs(h) % HUES.length];
 }
 
-function MiniAvatar({ calisan }) {
-  const bas = `${calisan.ad?.[0] || ''}${calisan.soyad?.[0] || ''}`.toUpperCase();
-  if (calisan.resimUrl) {
-    return (
-      <img
-        src={calisan.resimUrl}
-        alt={bas}
-        className="w-7 h-7 rounded-full object-cover flex-shrink-0"
-      />
-    );
-  }
+function SyAvatar({ ad, soyad, size = 'sm' }) {
+  const bas = `${ad?.[0] || ''}${soyad?.[0] || ''}`.toUpperCase();
+  const hue = projeHue((ad || '') + (soyad || ''));
+  const bg = `linear-gradient(135deg, oklch(58% 0.12 ${hue}), oklch(42% 0.15 ${hue}))`;
+  const cls = size === 'xs' ? 'sy-avatar sy-avatar--xs' : 'sy-avatar sy-avatar--sm';
   return (
-    <div className={`w-7 h-7 ${avatarRenk(calisan.ad + calisan.soyad)} rounded-full flex items-center justify-center text-xs font-semibold text-white flex-shrink-0`}>
+    <div className={cls} style={{ background: bg, color: '#fff' }}>
       {bas}
     </div>
   );
@@ -32,79 +23,92 @@ function MiniAvatar({ calisan }) {
 
 export default function ProjeKutu({ proje, atananCalisanlar, onRemove, loadingIds, onPasifAl }) {
   const { isOver, setNodeRef } = useDroppable({ id: proje.id });
+  const hue = projeHue(proje.ad);
+  const dotColor = `oklch(62% 0.16 ${hue})`;
 
   return (
     <div
       ref={setNodeRef}
-      className={`
-        rounded-2xl border p-5 transition-all min-h-[140px] backdrop-blur-sm shadow-md
-        ${isOver
-          ? 'border-blue-400/80 bg-blue-950/50 shadow-lg shadow-blue-900/40'
-          : 'border-slate-700/70 bg-slate-800/50 shadow-slate-950/40'
-        }
-      `}
+      className={`sy-project${isOver ? ' is-over' : ''}`}
     >
-      <div className="mb-4 flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h3 className="font-bold text-white text-base leading-tight">{proje.ad}</h3>
-          {proje.musteri && (
-            <p className="text-slate-400 text-xs mt-1">{proje.musteri}</p>
+      {/* Head */}
+      <div className="sy-project__head">
+        <div className="sy-project__titlerow">
+          <span className="sy-project__dot" style={{ background: dotColor }} />
+          <span className="sy-project__title">{proje.ad}</span>
+          {onPasifAl && (
+            <button
+              onClick={() => onPasifAl(proje.id)}
+              title="Pasife Al"
+              style={{
+                width: 24, height: 24, borderRadius: 6,
+                display: 'grid', placeItems: 'center',
+                color: 'var(--ink-mute)', fontSize: 13,
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--err)'; e.currentTarget.style.background = 'color-mix(in oklab, var(--err) 12%, transparent)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-mute)'; e.currentTarget.style.background = 'transparent'; }}
+            >
+              ⚙
+            </button>
           )}
         </div>
-        {onPasifAl && (
-          <button
-            onClick={() => onPasifAl(proje.id)}
-            title="Pasife Al"
-            className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded text-xs border border-slate-700 text-slate-600 hover:border-red-500/60 hover:text-red-400 transition-all"
-          >
-            ⚙
-          </button>
+        {proje.musteri && (
+          <div className="sy-project__musteri">{proje.musteri}</div>
         )}
       </div>
 
-      {isOver && atananCalisanlar.length === 0 && (
-        <div className="border-2 border-dashed border-blue-500/60 rounded-lg h-10 flex items-center justify-center">
-          <span className="text-blue-400 text-xs">Buraya bırak</span>
-        </div>
-      )}
+      {/* Body — assigned workers */}
+      <div className="sy-project__body">
+        {isOver && atananCalisanlar.length === 0 && (
+          <div className="sy-project__empty" style={{ borderColor: 'var(--accent)', color: 'var(--accent-bright)', background: 'var(--accent-soft)' }}>
+            <span style={{ fontSize: 18 }}>⊕</span>
+            <span>Buraya bırak</span>
+          </div>
+        )}
 
-      <div className="flex flex-col gap-2.5">
         {atananCalisanlar.map((item) => (
-          <div
-            key={item.takipId}
-            className="flex items-center justify-between bg-slate-700/50 border border-slate-600/60 rounded-xl px-3 py-2.5 gap-2 backdrop-blur-sm"
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <MiniAvatar calisan={item.calisan} />
-              <div className="min-w-0">
-                <p className="text-slate-100 text-sm font-medium leading-tight truncate">
-                  {item.calisan.ad} {item.calisan.soyad}
-                </p>
-                {item.calisan.lakap && (
-                  <p className="text-slate-400 text-xs truncate">"{item.calisan.lakap}"</p>
-                )}
-              </div>
+          <div key={item.takipId} className="sy-assign">
+            <SyAvatar ad={item.calisan.ad} soyad={item.calisan.soyad} size="sm" />
+            <div className="sy-assign__info">
+              <b>{item.calisan.ad} {item.calisan.soyad}</b>
+              {item.calisan.rol && <div className="sy-assign__sub">{item.calisan.rol}</div>}
             </div>
             <button
               onClick={() => onRemove(item.takipId)}
               disabled={loadingIds.has(item.takipId)}
-              className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-slate-600 hover:bg-red-600 text-slate-300 hover:text-white transition-colors disabled:opacity-50"
+              className="sy-assign__remove"
               title="Görevi kaldır"
             >
-              {loadingIds.has(item.takipId) ? (
-                <Spinner size="sm" />
-              ) : (
-                <span className="text-xs font-bold">✕</span>
-              )}
+              {loadingIds.has(item.takipId) ? <Spinner size="sm" /> : '✕'}
             </button>
           </div>
         ))}
 
         {!isOver && atananCalisanlar.length === 0 && (
-          <div className="border-2 border-dashed border-slate-600/40 rounded-xl h-12 flex items-center justify-center">
-            <span className="text-slate-600 text-xs">Çalışan sürükle</span>
+          <div className="sy-project__empty">
+            <span style={{ fontSize: 18, color: 'var(--ink-faint)' }}>⊕</span>
+            <span>Çalışan sürükleyin</span>
           </div>
         )}
+      </div>
+
+      {/* Foot */}
+      <div className="sy-project__foot">
+        <div className="sy-avatar-stack">
+          {atananCalisanlar.slice(0, 4).map((item) => (
+            <SyAvatar key={item.takipId} ad={item.calisan.ad} soyad={item.calisan.soyad} size="xs" />
+          ))}
+          {atananCalisanlar.length > 4 && (
+            <div
+              className="sy-avatar sy-avatar--xs"
+              style={{ background: 'var(--card-2)', color: 'var(--ink-dim)', marginLeft: -4, border: '2px solid var(--panel-2)' }}
+            >
+              +{atananCalisanlar.length - 4}
+            </div>
+          )}
+        </div>
+        <span>{atananCalisanlar.length} kişi atandı</span>
       </div>
     </div>
   );

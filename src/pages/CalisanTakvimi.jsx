@@ -181,10 +181,12 @@ export default function CalisanTakvimi() {
   }
 
   return (
-    <div className="p-4 sm:p-8">
-      <div className="mb-5 sm:mb-8">
-        <h1 className="text-xl sm:text-2xl font-bold text-white">Çalışan Takvimi</h1>
-        <p className="text-slate-400 text-xs sm:text-sm mt-1">Aylık proje atama görünümü</p>
+    <div>
+      <div className="sy-page-head" style={{ marginBottom: 24 }}>
+        <div>
+          <h1>Çalışan Takvimi</h1>
+          <p style={{ marginTop: 6, color: 'var(--ink-mute)', fontSize: 13 }}>Aylık proje atama görünümü</p>
+        </div>
       </div>
 
       {hata && (
@@ -194,70 +196,68 @@ export default function CalisanTakvimi() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+      <div className="sy-board">
         {/* Sol: Çalışan listesi */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-white">Çalışanlar</h2>
-            <span className="text-xs text-slate-400 bg-slate-800/80 border border-slate-700 px-2.5 py-1 rounded-full">
-              {calisanlar.length} kişi
-            </span>
+        <aside className="sy-worker-panel">
+          <div className="sy-worker-panel__head">
+            <div className="sy-worker-panel__title">
+              <h3>👷 Çalışanlar</h3>
+              <span className="sy-worker-panel__count">{calisanlar.length} kişi</span>
+            </div>
           </div>
-          <div className="flex flex-col gap-1.5 max-h-[220px] lg:max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
+          <div className="sy-worker-list">
             {calisanlar.map((c) => (
               <button
                 key={c.id}
                 onClick={() => { setSecilenId(c.id); setAssignments({}); setOdemeler([]); }}
-                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-left transition-all backdrop-blur-sm ${
-                  secilenId === c.id
-                    ? 'bg-blue-600/20 border border-blue-500/50 text-blue-200 shadow-sm'
-                    : 'border border-slate-700/40 hover:bg-slate-800/60 hover:border-slate-600/60 text-slate-300'
-                }`}
+                className="sy-worker"
+                style={{
+                  background: secilenId === c.id ? 'color-mix(in oklab, var(--accent) 14%, transparent)' : undefined,
+                  border: secilenId === c.id ? '1px solid var(--accent-ring)' : '1px solid transparent',
+                  cursor: 'pointer',
+                  width: '100%', textAlign: 'left',
+                }}
               >
                 <Avatar calisan={c} />
-                <div className="min-w-0">
-                  <p className="text-sm font-medium truncate flex items-center gap-1.5">
-                    <span className="truncate">{c.ad} {c.soyad}</span>
-                    {c.aktif === false && (
-                      <span className="text-slate-600 text-xs font-normal flex-shrink-0">(Pasif)</span>
-                    )}
-                  </p>
-                  {c.rol
-                    ? <p className="text-xs text-slate-500 truncate">{c.rol}</p>
-                    : c.lakap
-                    ? <p className="text-xs text-slate-500 truncate">"{c.lakap}"</p>
-                    : null
-                  }
+                <div className="sy-worker__info">
+                  <b style={{ color: secilenId === c.id ? 'var(--accent-bright)' : 'var(--ink)' }}>
+                    {c.ad} {c.soyad}
+                    {c.aktif === false && <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 400, marginLeft: 4 }}>(Pasif)</span>}
+                  </b>
+                  <div className="sy-worker__role">
+                    {c.rol || (c.lakap ? `"${c.lakap}"` : '')}
+                  </div>
                 </div>
               </button>
             ))}
           </div>
-        </div>
+        </aside>
 
         {/* Sağ: Takvim + Ödemeler */}
-        <div className="flex flex-col gap-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, minWidth: 0 }}>
           {!secilenId ? (
-            <div className="flex items-center justify-center h-80 bg-slate-800/60 border border-slate-700/70 rounded-2xl backdrop-blur-sm shadow-md shadow-slate-950/40">
-              <div className="text-center">
-                <p className="text-slate-500 text-5xl mb-3">📅</p>
-                <p className="text-slate-400 text-sm">Sol taraftan bir çalışan seçin</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300, background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)' }}>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ fontSize: 48, marginBottom: 12 }}>📅</p>
+                <p style={{ color: 'var(--ink-mute)', fontSize: 14 }}>Sol taraftan bir çalışan seçin</p>
               </div>
             </div>
           ) : (
             <>
               {/* Takvim kartı */}
-              <div className="bg-slate-800/60 border border-slate-700/70 rounded-2xl overflow-hidden backdrop-blur-sm shadow-md shadow-slate-950/50">
+              <div style={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
                 {/* Ay navigasyonu */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700/60">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
                   <button
                     onClick={prevMonth}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors text-lg"
+                    className="sy-icon-btn"
+                    style={{ fontSize: 20 }}
                   >
                     ‹
                   </button>
-                  <div className="text-center flex items-center gap-3">
+                  <div style={{ textAlign: 'center', display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div>
-                      <h3 className="font-semibold text-slate-100 text-base">
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>
                         {AYLAR[month - 1]} {year}
                       </h3>
                       {secilenCalisan && (

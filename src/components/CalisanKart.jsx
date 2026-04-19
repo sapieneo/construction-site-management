@@ -1,37 +1,39 @@
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
-const AVATAR_COLORS = [
-  'bg-blue-600', 'bg-emerald-600', 'bg-violet-600', 'bg-amber-600',
-  'bg-rose-600', 'bg-cyan-600', 'bg-indigo-600', 'bg-teal-600',
-];
-
-function avatarRenk(isim) {
-  let hash = 0;
-  for (let i = 0; i < isim.length; i++) hash = isim.charCodeAt(i) + ((hash << 5) - hash);
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+function avatarHue(isim) {
+  const HUES = [32, 215, 150, 285, 12, 340, 225, 90, 180, 260, 60, 310];
+  let h = 0;
+  for (let i = 0; i < isim.length; i++) h = isim.charCodeAt(i) + ((h << 5) - h);
+  return HUES[Math.abs(h) % HUES.length];
 }
 
-function Avatar({ calisan, size = 'md' }) {
-  const dim = size === 'sm' ? 'w-7 h-7 text-xs' : 'w-9 h-9 text-sm';
+function SyAvatar({ calisan }) {
   const bas = `${calisan.ad?.[0] || ''}${calisan.soyad?.[0] || ''}`.toUpperCase();
+  const hue = avatarHue(calisan.ad + calisan.soyad);
   if (calisan.resimUrl) {
     return (
       <img
         src={calisan.resimUrl}
         alt={bas}
-        className={`${dim} rounded-full object-cover flex-shrink-0`}
+        className="sy-avatar"
+        style={{ objectFit: 'cover' }}
       />
     );
   }
   return (
-    <div className={`${dim} ${avatarRenk(calisan.ad + calisan.soyad)} rounded-full flex items-center justify-center font-semibold text-white flex-shrink-0`}>
+    <div
+      className="sy-avatar"
+      style={{
+        background: `linear-gradient(135deg, oklch(58% 0.12 ${hue}), oklch(42% 0.15 ${hue}))`,
+        color: '#fff',
+      }}
+    >
       {bas}
     </div>
   );
 }
 
-// durum: null | 'atandi' | 'hasta' | 'izinli'
 export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, onAta, overlay = false }) {
   const surukleDevre = durum === 'hasta' || durum === 'izinli';
 
@@ -45,112 +47,127 @@ export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, 
 
   if (overlay) {
     return (
-      <div className="bg-blue-600 border border-blue-400 rounded-lg px-3 py-2 shadow-xl cursor-grabbing select-none flex items-center gap-2.5">
-        <Avatar calisan={calisan} />
-        <div>
-          <p className="font-semibold text-white text-sm leading-tight">
+      <div
+        className="sy-worker"
+        style={{
+          background: 'var(--accent)',
+          border: '1px solid var(--accent-bright)',
+          borderRadius: 'var(--r-sm)',
+          padding: '10px 12px',
+          boxShadow: 'var(--shadow-lg)',
+          cursor: 'grabbing',
+          opacity: 1,
+        }}
+      >
+        <SyAvatar calisan={calisan} />
+        <div className="sy-worker__info">
+          <b style={{ color: 'var(--accent-ink)', fontFamily: 'var(--font-display)' }}>
             {calisan.ad} {calisan.soyad}
-          </p>
-          {calisan.lakap && (
-            <p className="text-blue-200 text-xs">"{calisan.lakap}"</p>
-          )}
+          </b>
+          {calisan.rol && <div className="sy-worker__role" style={{ color: 'color-mix(in oklab, var(--accent-ink) 70%, transparent)' }}>{calisan.rol}</div>}
         </div>
       </div>
     );
   }
 
-  // Kart arka plan / kenarlık duruma göre
-  let kartClass = '';
-  if (isDragging) {
-    kartClass = 'opacity-30 cursor-grabbing bg-blue-900/40 border-blue-700/60 shadow-md';
-  } else if (durum === 'hasta') {
-    kartClass = 'bg-amber-900/25 border-amber-600/50 cursor-not-allowed shadow-sm';
-  } else if (durum === 'izinli') {
-    kartClass = 'bg-blue-900/25 border-blue-500/50 cursor-not-allowed shadow-sm';
-  } else if (durum === 'atandi') {
-    kartClass = 'bg-slate-800/50 border-emerald-800/50 opacity-70 cursor-grab hover:border-emerald-600 hover:opacity-90 shadow-sm backdrop-blur-sm';
-  } else {
-    kartClass = 'bg-slate-800/70 border-slate-700/60 cursor-grab hover:border-blue-500/80 hover:bg-slate-700/80 active:cursor-grabbing shadow-sm backdrop-blur-sm';
-  }
+  let workerClass = 'sy-worker';
+  if (isDragging) workerClass += ' is-dragging';
+  else if (durum === 'hasta') workerClass += ' is-hasta';
+  else if (durum === 'izinli') workerClass += ' is-izinli';
+  else if (durum === 'atandi') workerClass += ' is-assigned';
+
+  const statusDot = durum === 'hasta' ? 's-sick' : durum === 'izinli' ? 's-leave' : 's-on';
 
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...(!surukleDevre ? { ...listeners, ...attributes } : {})}
-      className={`rounded-xl border px-3.5 py-2.5 select-none transition-all flex items-center gap-3 ${kartClass}`}
+      className={workerClass}
     >
-      <Avatar calisan={calisan} />
-
-      {/* İsim ve bilgiler */}
-      <div className="min-w-0 flex-1">
-        <p className={`font-semibold text-sm leading-tight truncate ${
-          durum === 'hasta' ? 'text-amber-200' :
-          durum === 'izinli' ? 'text-blue-200' :
-          durum === 'atandi' ? 'text-slate-300' :
-          'text-slate-100'
-        }`}>
-          {calisan.ad} {calisan.soyad}
-        </p>
-        {calisan.lakap && (
-          <p className="text-xs truncate text-slate-500">"{calisan.lakap}"</p>
-        )}
-        {calisan.rol && (
-          <p className="text-xs truncate text-slate-600">{calisan.rol}</p>
-        )}
+      {/* Avatar with status dot */}
+      <div style={{ position: 'relative', flexShrink: 0 }}>
+        <SyAvatar calisan={calisan} />
+        <span className={`sy-sdot ${statusDot}`} style={{ position: 'absolute', bottom: -1, right: -1, width: 10, height: 10, borderRadius: '50%', border: '2px solid var(--panel)' }} />
       </div>
 
-      {/* Durum göstergesi (atandı) */}
-      {durum === 'atandi' && (
-        <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" title="Projeye atandı" />
-      )}
+      {/* Info */}
+      <div className="sy-worker__info">
+        <b>{calisan.ad} {calisan.soyad}</b>
+        <div className="sy-worker__role">
+          {calisan.rol || ''}
+          {calisan.lakap && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-faint)', marginLeft: 4 }}>"{calisan.lakap}"</span>}
+        </div>
+      </div>
 
-      {/* Mobil "Ata" butonu */}
+      {/* Status badge */}
+      {durum === 'hasta' && <span className="sy-worker__status s-hasta">Hasta</span>}
+      {durum === 'izinli' && <span className="sy-worker__status s-izinli">İzinli</span>}
+      {durum === 'atandi' && <span className="sy-worker__status s-atandi">Atandı</span>}
+
+      {/* Mobile "Ata" button */}
       {onAta && durum !== 'hasta' && durum !== 'izinli' && (
         <button
           onClick={(e) => { e.stopPropagation(); onAta(); }}
           onPointerDown={(e) => e.stopPropagation()}
-          className="sm:hidden flex-shrink-0 px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-700 hover:bg-blue-600 text-white transition-colors"
+          style={{
+            display: 'none',
+            flexShrink: 0,
+            padding: '4px 10px',
+            borderRadius: 6,
+            fontSize: 11,
+            fontWeight: 600,
+            background: 'var(--accent)',
+            color: 'var(--accent-ink)',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+          className="sy-mobile-ata"
         >
           Ata
         </button>
       )}
 
-      {/* H / İ / ⚙️ butonları */}
+      {/* H / İ / ⚙ toggles */}
       <div
-        className="flex gap-1 flex-shrink-0"
+        className="sy-worker__tools"
         onPointerDown={(e) => e.stopPropagation()}
+        style={{ display: 'flex', gap: 3, flexShrink: 0, opacity: undefined }}
       >
         <button
           onClick={(e) => { e.stopPropagation(); onToggleDurum?.(calisan.id, 'hasta'); }}
           title="Hasta"
-          className={`w-6 h-6 rounded text-xs font-bold transition-all ${
-            durum === 'hasta'
-              ? 'bg-amber-500 text-white shadow-md shadow-amber-900/40'
-              : 'bg-transparent border border-slate-600 text-slate-500 hover:border-amber-500 hover:text-amber-400'
-          }`}
-        >
-          H
-        </button>
+          style={{
+            width: 22, height: 22, borderRadius: 5, fontSize: 10, fontWeight: 700,
+            border: `1px solid ${durum === 'hasta' ? 'transparent' : 'var(--border-strong)'}`,
+            background: durum === 'hasta' ? 'var(--warn)' : 'transparent',
+            color: durum === 'hasta' ? '#fff' : 'var(--ink-mute)',
+            cursor: 'pointer',
+          }}
+        >H</button>
         <button
           onClick={(e) => { e.stopPropagation(); onToggleDurum?.(calisan.id, 'izinli'); }}
           title="İzinli"
-          className={`w-6 h-6 rounded text-xs font-bold transition-all ${
-            durum === 'izinli'
-              ? 'bg-blue-500 text-white shadow-md shadow-blue-900/40'
-              : 'bg-transparent border border-slate-600 text-slate-500 hover:border-blue-400 hover:text-blue-400'
-          }`}
-        >
-          İ
-        </button>
+          style={{
+            width: 22, height: 22, borderRadius: 5, fontSize: 10, fontWeight: 700,
+            border: `1px solid ${durum === 'izinli' ? 'transparent' : 'var(--border-strong)'}`,
+            background: durum === 'izinli' ? 'var(--ok)' : 'transparent',
+            color: durum === 'izinli' ? '#fff' : 'var(--ink-mute)',
+            cursor: 'pointer',
+          }}
+        >İ</button>
         {onPasifAl && (
           <button
             onClick={(e) => { e.stopPropagation(); onPasifAl(calisan.id); }}
             title="Pasife Al"
-            className="w-6 h-6 rounded text-xs transition-all bg-transparent border border-slate-700 text-slate-600 hover:border-red-500/60 hover:text-red-400"
-          >
-            ⚙
-          </button>
+            style={{
+              width: 22, height: 22, borderRadius: 5, fontSize: 11,
+              border: '1px solid var(--border-strong)',
+              background: 'transparent',
+              color: 'var(--ink-faint)',
+              cursor: 'pointer',
+            }}
+          >⚙</button>
         )}
       </div>
     </div>

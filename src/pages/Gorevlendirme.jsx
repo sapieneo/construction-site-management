@@ -298,65 +298,103 @@ export default function Gorevlendirme() {
     }
   }
 
+  const totalAtanmis = atanmisCalisanIds().size;
+  const muzaitSayisi = calisanlar.filter(c => !atanmisCalisanIds().has(c.id) && !durumlar[c.id]).length;
+  const hastaSayisi = Object.values(durumlar).filter(d => d === 'hasta').length;
+
   return (
-    <div className="p-4 sm:p-8">
-      {/* Başlık + Tarih + Görevlendir Butonu */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+    <div>
+      {/* Page header */}
+      <div className="sy-page-head">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-100">Görevlendirme</h1>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            <span className="hidden sm:inline">Çalışanları projelere sürükleyerek atayın</span>
-            <span className="sm:hidden">Çalışana tıklayıp projeye atayın</span>
+          <h1>
+            Görevlendirme
+            <span className="sy-count">{totalAtanmis} / {calisanlar.length} atandı</span>
+          </h1>
+          <p style={{ marginTop: 6, color: 'var(--ink-mute)', fontSize: 13 }}>
+            Çalışanları projelere sürükleyin — mobilde çalışana dokunun.
           </p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="sy-page-head__right">
           {loading && <Spinner />}
-          <label className="text-slate-400 text-sm">Tarih:</label>
+          <label style={{ color: 'var(--ink-mute)', fontSize: 13 }}>Tarih:</label>
           <input
             type="date"
             value={tarih}
             onChange={(e) => tarihDegistir(e.target.value)}
-            className="bg-slate-700 border border-slate-600 text-slate-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            style={{
+              background: 'var(--card-2)', border: '1px solid var(--border)',
+              color: 'var(--ink)', borderRadius: 'var(--r-sm)',
+              padding: '8px 12px', fontSize: 13, outline: 'none',
+            }}
           />
           <button
             onClick={handleGorevlendir}
             disabled={kaydetmeYukluyor || loading}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-500 active:bg-green-700 disabled:bg-green-900 disabled:opacity-60 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm shadow-lg shadow-green-900/30"
+            className="sy-btn-primary"
+            style={{ opacity: (kaydetmeYukluyor || loading) ? 0.6 : 1 }}
           >
             {kaydetmeYukluyor && <Spinner size="sm" />}
-            {kaydetmeYukluyor ? 'Kaydediliyor...' : 'Görevlendir'}
+            {kaydetmeYukluyor ? 'Kaydediliyor…' : '✓ Görevlendir'}
           </button>
         </div>
       </div>
 
-      {/* Kaydedilmemiş değişiklik uyarısı */}
+      {/* KPI Cards */}
+      <div className="sy-kpis">
+        <div className="sy-kpi sy-kpi--accent">
+          <div className="sy-kpi__label">🏗️ Atanmış Görev</div>
+          <div className="sy-kpi__value">
+            {totalAtanmis}
+            <span className="sy-kpi__unit">/ {calisanlar.length} kişi</span>
+          </div>
+          <div className="sy-kpi__sub">Bugün sahaya çıkan</div>
+          <div className="sy-kpi__progress">
+            <span className="sy-kpi__progress-fill" style={{ width: calisanlar.length ? `${Math.round(totalAtanmis / calisanlar.length * 100)}%` : '0%' }} />
+          </div>
+        </div>
+        <div className="sy-kpi">
+          <div className="sy-kpi__label">✅ Müsait</div>
+          <div className="sy-kpi__value">{muzaitSayisi}</div>
+          <div className="sy-kpi__sub">Atanmayı bekliyor</div>
+        </div>
+        <div className="sy-kpi">
+          <div className="sy-kpi__label">🏢 Aktif Proje</div>
+          <div className="sy-kpi__value">{projeler.length}</div>
+          <div className="sy-kpi__sub">Aktif projeler</div>
+        </div>
+        <div className="sy-kpi">
+          <div className="sy-kpi__label">⚠️ Hasta / İzinli</div>
+          <div className="sy-kpi__value">{hastaSayisi + (Object.values(durumlar).filter(d => d === 'izinli').length)}</div>
+          <div className="sy-kpi__sub">Bugün yok</div>
+        </div>
+      </div>
+
+      {/* Banners */}
       {kaydedilmemisDegisiklik && !kaydetmeYukluyor && (
-        <div className="mb-4 bg-amber-900/30 border border-amber-600/70 text-amber-300 rounded-lg px-4 py-3 text-sm flex items-center gap-2">
-          <span className="text-amber-400 text-base">⚠</span>
+        <div className="sy-banner sy-banner--warn">
+          <span>⚠</span>
           Kaydedilmemiş değişiklikler var — Görevlendir butonuna basmayı unutmayın!
         </div>
       )}
-
-      {/* Başarı mesajı */}
       {basariMesaj && (
-        <div className="mb-4 bg-green-900/30 border border-green-700/70 text-green-300 rounded-lg px-4 py-3 text-sm flex items-center gap-2">
-          <span className="text-green-400 text-base">✓</span>
+        <div className="sy-banner sy-banner--ok">
+          <span>✓</span>
           {basariMesaj}
         </div>
       )}
-
       {hata && (
-        <div className="mb-4 bg-red-900/40 border border-red-700 text-red-300 rounded-lg px-4 py-3 text-sm flex justify-between items-center">
+        <div className="sy-banner sy-banner--err" style={{ justifyContent: 'space-between' }}>
           <span>Hata: {hata}</span>
-          <button onClick={() => setHata(null)} className="text-red-400 hover:text-red-200 ml-4">✕</button>
+          <button onClick={() => setHata(null)} style={{ color: 'inherit', opacity: 0.7, fontSize: 16 }}>✕</button>
         </div>
       )}
 
       {loading && calisanlar.length === 0 ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 240 }}>
+          <div style={{ textAlign: 'center' }}>
             <Spinner size="lg" />
-            <p className="text-slate-400 text-sm mt-3">Veriler yükleniyor...</p>
+            <p style={{ color: 'var(--ink-mute)', fontSize: 13, marginTop: 12 }}>Veriler yükleniyor…</p>
           </div>
         </div>
       ) : (
@@ -370,16 +408,23 @@ export default function Gorevlendirme() {
           onDragEnd={handleDragEnd}
           onDragCancel={() => setAktifCalisan(null)}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-8">
-            {/* Sol: Çalışanlar */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-slate-100">Çalışanlar</h2>
-                <span className="text-xs text-slate-400 bg-slate-800/80 border border-slate-700 px-2.5 py-1 rounded-full">
-                  {calisanlar.length} kişi
-                </span>
+          <div className="sy-board">
+            {/* Sol: Çalışanlar paneli */}
+            <aside className="sy-worker-panel">
+              <div className="sy-worker-panel__head">
+                <div className="sy-worker-panel__title">
+                  <h3>👷 Çalışanlar</h3>
+                  <span className="sy-worker-panel__count">{calisanlar.filter(c => !durumlar[c.id]).length} aktif</span>
+                </div>
+                <div className="sy-chips">
+                  <button className="sy-chip" aria-pressed="true">Hepsi · {calisanlar.length}</button>
+                  <button className="sy-chip">
+                    <span className="dot-s" />Müsait · {muzaitSayisi}
+                  </button>
+                  <button className="sy-chip">Atanmış · {totalAtanmis}</button>
+                </div>
               </div>
-              <div className="flex flex-col gap-2.5 max-h-[calc(100vh-260px)] overflow-y-auto pr-1">
+              <div className="sy-worker-list">
                 {calisanlar.map((calisan) => (
                   <CalisanKart
                     key={calisan.id}
@@ -391,17 +436,20 @@ export default function Gorevlendirme() {
                   />
                 ))}
               </div>
-            </div>
+            </aside>
 
             {/* Sağ: Projeler */}
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-slate-100">Projeler</h2>
-                <span className="text-xs text-slate-400 bg-slate-800/80 border border-slate-700 px-2.5 py-1 rounded-full">
-                  {projeler.length} proje
-                </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span className="sy-board-label">Projeler</span>
+                <button className="sy-chip" aria-pressed="true">Hepsi · {projeler.length}</button>
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+                  <button className="sy-btn-ghost" onClick={() => setAtaModal(null)}>
+                    + Proje Ekle
+                  </button>
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 max-h-[calc(100vh-260px)] overflow-y-auto pr-1">
+              <div className="sy-projects-grid">
                 {projeler.map((proje) => (
                   <ProjeKutu
                     key={proje.id}
@@ -424,46 +472,51 @@ export default function Gorevlendirme() {
         </DndContext>
       )}
 
-      {/* Mobil: Proje seçim modalı */}
+      {/* Mobil: Proje seçim bottom sheet */}
       {ataModal && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-sm max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700">
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.72)',
+          zIndex: 100, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          padding: 16,
+        }}>
+          <div style={{
+            background: 'var(--panel)', border: '1px solid var(--border-strong)',
+            borderRadius: 'var(--r-xl)', width: '100%', maxWidth: 420,
+            maxHeight: '80vh', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+            boxShadow: 'var(--shadow-pop)',
+          }}>
+            {/* Grab handle */}
+            <div style={{ width: 36, height: 4, borderRadius: 2, background: 'var(--border-strong)', margin: '12px auto 0' }} />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px 12px', borderBottom: '1px solid var(--border)' }}>
               <div>
-                <h3 className="font-semibold text-slate-100 text-base">
-                  {ataModal.ad} {ataModal.soyad}
-                </h3>
-                <p className="text-slate-400 text-xs mt-0.5">Hangi projeye atanacak?</p>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>{ataModal.ad} {ataModal.soyad}</div>
+                <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 2 }}>Hangi projeye atanacak?</div>
               </div>
               <button
                 onClick={() => setAtaModal(null)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700"
-              >
-                ✕
-              </button>
+                className="sy-icon-btn"
+              >✕</button>
             </div>
-            <div className="overflow-y-auto flex-1 p-3 flex flex-col gap-1.5">
+            <div style={{ overflowY: 'auto', flex: 1, padding: '8px 12px 16px', display: 'flex', flexDirection: 'column', gap: 6 }}>
               {projeler.map((proje) => {
-                const zatenAtandi = takipler.find(
-                  (t) => t.calisanId === ataModal.id && t.projeId === proje.id
-                );
+                const zatenAtandi = takipler.find(t => t.calisanId === ataModal.id && t.projeId === proje.id);
                 return (
                   <button
                     key={proje.id}
-                    onClick={() => {
-                      handleMobileAta(ataModal.id, proje.id);
-                      setAtaModal(null);
+                    onClick={() => { handleMobileAta(ataModal.id, proje.id); setAtaModal(null); }}
+                    style={{
+                      width: '100%', textAlign: 'left',
+                      padding: '12px 16px', borderRadius: 'var(--r-md)',
+                      background: zatenAtandi ? 'color-mix(in oklab, var(--ok) 10%, transparent)' : 'var(--card-2)',
+                      border: `1px solid ${zatenAtandi ? 'color-mix(in oklab, var(--ok) 30%, transparent)' : 'var(--border)'}`,
+                      color: zatenAtandi ? 'var(--ok)' : 'var(--ink)',
+                      fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      transition: 'background 0.12s',
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-xl transition-colors text-sm font-medium ${
-                      zatenAtandi
-                        ? 'bg-emerald-900/30 border border-emerald-700/50 text-emerald-300'
-                        : 'bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-transparent hover:border-slate-600'
-                    }`}
                   >
                     <span>{proje.ad}</span>
-                    {zatenAtandi && (
-                      <span className="ml-2 text-emerald-400 text-xs">✓ Atandı</span>
-                    )}
+                    {zatenAtandi && <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.04em' }}>ATANDI ✓</span>}
                   </button>
                 );
               })}
