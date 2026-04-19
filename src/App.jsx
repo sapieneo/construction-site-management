@@ -27,10 +27,10 @@ function SidebarNav({ aktif, onNav, onAcikModal }) {
     <aside className="sy-sidebar">
       {/* Logo */}
       <div className="sy-logo">
-        <div className="sy-logo__mark">🦺</div>
+        <img src="/ads-logo.jpg" alt="ADS Metal" style={{ height: 38, width: 38, objectFit: 'contain', borderRadius: 8, background: 'transparent' }} />
         <div className="sy-logo__text">
-          <b>Şantiye</b>
-          <span>Yönetim</span>
+          <b>ADS Metal</b>
+          <span>Şantiye Yönetim</span>
         </div>
       </div>
 
@@ -80,25 +80,19 @@ function SidebarNav({ aktif, onNav, onAcikModal }) {
   );
 }
 
-function TopBar({ aktifLabel, onAcikModal, reloadKey, setReloadKey, menuAcik, setMenuAcik }) {
+function TopBar({ onAcikModal, setReloadKey, menuAcik, setMenuAcik }) {
   return (
     <header className="sy-topbar">
-      {/* Desktop: crumbs */}
-      <div className="sy-crumbs sy-desktop-crumbs">
-        <span>Dashboard</span>
-        <span style={{ color: 'var(--ink-faint)' }}>/</span>
-        <b>{aktifLabel}</b>
+      {/* Desktop: logo alanı (sol) */}
+      <div className="sy-desktop-crumbs" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <img src="/ads-logo.jpg" alt="ADS Metal" style={{ height: 32, objectFit: 'contain', borderRadius: 6 }} />
+        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--ink)' }}>ADS Metal</span>
       </div>
 
-      {/* Desktop: search */}
-      <div className="sy-search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
-        </svg>
-        <input placeholder="Ara…" />
-      </div>
+      {/* Orta boşluk */}
+      <div style={{ flex: 1 }} />
 
-      {/* Desktop: actions */}
+      {/* Desktop: sağ aksiyonlar */}
       <div className="sy-topbar-actions sy-desktop-actions">
         <div className="sy-date">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -106,22 +100,25 @@ function TopBar({ aktifLabel, onAcikModal, reloadKey, setReloadKey, menuAcik, se
           </svg>
           {todayFmt}
         </div>
-        <button className="sy-icon-btn" onClick={() => setReloadKey((k) => k + 1)} title="Yenile">
-          🔄
+        <button className="sy-icon-btn" title="Bildirimler">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+          </svg>
+          <span className="dot" />
         </button>
-        <button className="sy-btn-primary" onClick={() => onAcikModal('calisan')}>
-          + Çalışan
-        </button>
-        <button className="sy-btn-ghost" onClick={() => onAcikModal('proje')}>
-          + Proje
+        <button className="sy-btn-ghost" onClick={() => setReloadKey((k) => k + 1)} title="Listeyi yenile">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="M7 10l5 5 5-5M12 15V3" />
+          </svg>
+          Dışa Aktar
         </button>
       </div>
 
       {/* Mobile: head */}
       <div className="sy-mobile-head">
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 20 }}>🦺</span>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>{aktifLabel}</span>
+          <img src="/ads-logo.jpg" alt="ADS Metal" style={{ height: 28, objectFit: 'contain', borderRadius: 5 }} />
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15 }}>ADS Metal</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <button className="sy-icon-btn" onClick={() => setReloadKey((k) => k + 1)} title="Yenile">🔄</button>
@@ -164,9 +161,7 @@ export default function App() {
 
       {/* TopBar */}
       <TopBar
-        aktifLabel={aktifLabel}
         onAcikModal={setAcikModal}
-        reloadKey={reloadKey}
         setReloadKey={setReloadKey}
         menuAcik={menuAcik}
         setMenuAcik={setMenuAcik}
