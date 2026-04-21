@@ -111,7 +111,6 @@ export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, 
           onClick={(e) => { e.stopPropagation(); onAta(); }}
           onPointerDown={(e) => e.stopPropagation()}
           style={{
-            display: 'none',
             flexShrink: 0,
             padding: '4px 10px',
             borderRadius: 6,
@@ -124,7 +123,7 @@ export default function CalisanKart({ calisan, durum, onToggleDurum, onPasifAl, 
           }}
           className="sy-mobile-ata"
         >
-          Ata
+          +
         </button>
       )}
 

@@ -83,12 +83,6 @@ function SidebarNav({ aktif, onNav, onAcikModal }) {
 function TopBar({ onAcikModal, setReloadKey, menuAcik, setMenuAcik }) {
   return (
     <header className="sy-topbar">
-      {/* Desktop: logo alanı (sol) */}
-      <div className="sy-desktop-crumbs" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <img src="/ads-logo.jpg" alt="ADS Metal" style={{ height: 32, objectFit: 'contain', borderRadius: 6 }} />
-        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 15, color: 'var(--ink)' }}>ADS Metal</span>
-      </div>
-
       {/* Orta boşluk */}
       <div style={{ flex: 1 }} />
 

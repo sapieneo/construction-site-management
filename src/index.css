@@ -382,6 +382,10 @@ input, select, textarea { font-family: inherit; color: inherit; }
   .sy-mobile-head { display: none; }
 }
 
+/* Mobile-only Ata button */
+.sy-mobile-ata { display: none; }
+@media (max-width: 960px) { .sy-mobile-ata { display: block; } }
+
 /* Mobile bottom tabbar */
 .sy-tabbar {
   display: none;
